@@ -18,9 +18,9 @@ class EmailsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+	    return EmailsSending::where('author_id', '=', $request->user()->id)->orderby('id', 'desc')->paginate(10);
     }
 
     /**
@@ -43,17 +43,25 @@ class EmailsController extends Controller
     {
         $user = $request->user();
         $msgData = [
-            'email' => $request->email,
+            'email' => $request->name,
             'subject' => $request->subject,
             'msg' => $request->msg,
             'author_id' => $user->id
         ];
         //dd($data, $user->name);
-        //dd(env('MAIL_PASSWORD'));
-        $email = EmailsSending::create($msgData);
-        $sendEmail = new CheckUserEmail($msgData, $user);
-
-        return $sendEmail;
+	    //dd(env('MAIL_HOST'));
+        if(new CheckUserEmail($msgData, $user) && EmailsSending::create($msgData))
+        {
+	        return response('Your message is sent! You could send next one.', 200);
+        }
+        else{
+        	return response('Error', 500);
+        }
+    }
+    
+    public function repeatLast(Request $request)
+    {
+    	return EmailsSending::select('email as name','subject','msg')->where('author_id', $request->user()->id)->orderby('id', 'desc')->first();
     }
 
     /**

@@ -34,10 +34,14 @@ class CheckUserEmail extends Mailable
     {
         $user = $this->user;
         $msgData = $this->msgData;
+        
+        //dd($msgData, $user);
 
-        \Mail::send('emails.email', $msgData, function($message) use($user, $msgData){
-            $message->from($user->email, $user->name);
-            $message->to($msgData['email'])->subject($msgData['subject']);
+	    \Mail::send('emails.email', $msgData, function($message) use($user, $msgData){
+            $message
+	            ->from($user->email, $user->name)
+	            ->to($msgData['email'])
+	            ->subject($msgData['subject']);
         });
 
         /*return $this->from($user->email)

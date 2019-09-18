@@ -3009,6 +3009,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Pagination_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Pagination.vue */ "./resources/js/components/Pagination.vue");
 //
 //
 //
@@ -3035,6 +3036,138 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      email: {
+        name: '',
+        subject: '',
+        msg: '',
+        resultOk: false
+      },
+      prevEmail: {},
+      emailsHistory: {},
+      total: 0,
+      per_page: 2,
+      from: 1,
+      to: 0,
+      current_page: 1,
+      offset: 4
+    };
+  },
+  components: {
+    VuePagination: _Pagination_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  methods: {
+    saveForm: function saveForm() {
+      event.preventDefault();
+      var app = this;
+      app.axios.post('/v1/emailsSending', app.email).then(function (resp) {
+        app.prevEmail = app.email;
+        app.email = {};
+        app.email.resultOk = true;
+        app.getSendingHistory();
+      })["catch"](function (resp) {
+        return alert('email err', resp.data);
+      });
+    },
+    repeatLast: function repeatLast() {
+      event.preventDefault();
+      var app = this;
+      app.axios.get('/v1/emailsSending/repeatLast').then(function (resp) {
+        app.email = resp.data;
+      })["catch"](function (err) {
+        return alert('error', err);
+      });
+    },
+    getSendingHistory: function getSendingHistory() {
+      var app = this;
+      app.axios.get("/v1/emailsSending?page=".concat(app.emailsHistory.current_page)).then(function (resp) {
+        app.emailsHistory = resp.data;
+      })["catch"](function (err) {
+        return alert(err.message);
+      });
+    },
+    clearForm: function clearForm() {
+      this.email = {};
+    }
+  },
+  mounted: function mounted() {
+    this.getSendingHistory();
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Pagination.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Pagination.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 //
 //
 //
@@ -3053,26 +3186,50 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      email: '',
-      subject: '',
-      msg: ''
-    };
+  props: {
+    pagination: {
+      type: Object,
+      required: true
+    },
+    offset: {
+      type: Number,
+      "default": 4
+    }
+  },
+  computed: {
+    pagesNumber: function pagesNumber() {
+      var app = this;
+
+      if (!app.pagination.to) {
+        return [];
+      }
+
+      var from = app.pagination.current_page - app.offset;
+
+      if (from < 1) {
+        from = 1;
+      }
+
+      var to = from + app.offset * 2;
+
+      if (to >= app.pagination.last_page) {
+        to = app.pagination.last_page;
+      }
+
+      var pagesArray = [];
+
+      for (var page = from; page <= to; page++) {
+        pagesArray.push(page);
+      }
+
+      return pagesArray;
+    }
   },
   methods: {
-    saveForm: function saveForm() {
-      event.preventDefault();
-      var app = this,
-          data = {
-        'email': app.email,
-        'subject': app.subject,
-        'msg': app.msg
-      };
-      app.axios.post('/v1/emailsSanding', data).then(function (resp) {//console.log('email ok', resp.data)
-      })["catch"](function (resp) {
-        console.log('email err', resp.data);
-      });
+    changePage: function changePage(page) {
+      var app = this;
+      app.pagination.current_page = page;
+      app.$emit('paginate');
     }
   }
 });
@@ -39739,124 +39896,209 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "panel panel-default" }, [
-      _vm._m(0),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-5 col-sm-12" }, [
+        _c("div", { staticClass: "panel panel-default" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _vm.email.resultOk
+              ? _c("div", { staticClass: "row" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "alert alert-success col-lg-12",
+                      attrs: { role: "alert" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Your message to " +
+                          _vm._s(_vm.prevEmail.name) +
+                          " is  sent! You could send next one.\n                        "
+                      )
+                    ]
+                  )
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    return _vm.saveForm()
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "form-group  col-md-12" }, [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Send to (e-mail)")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.email.name,
+                          expression: "email.name"
+                        }
+                      ],
+                      staticClass: "form-control form-re",
+                      attrs: { type: "email", required: "" },
+                      domProps: { value: _vm.email.name },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.email, "name", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "form-group col-md-12" }, [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Subject")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.email.subject,
+                          expression: "email.subject"
+                        }
+                      ],
+                      staticClass: "form-control form-re",
+                      attrs: { type: "text", required: "" },
+                      domProps: { value: _vm.email.subject },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.email, "subject", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "form-group col-md-12" }, [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Message")
+                    ]),
+                    _vm._v(" "),
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.email.msg,
+                          expression: "email.msg"
+                        }
+                      ],
+                      staticClass: "form-control form-re form-msg",
+                      attrs: { required: "" },
+                      domProps: { value: _vm.email.msg },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.email, "msg", $event.target.value)
+                        }
+                      }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "form-group col-md-12" }, [
+                    _c("button", { staticClass: "btn btn-success" }, [
+                      _vm._v("Send")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        on: { click: _vm.repeatLast }
+                      },
+                      [_vm._v("Repeat last")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        on: { click: _vm.clearForm }
+                      },
+                      [_vm._v("Clear form")]
+                    )
+                  ])
+                ])
+              ]
+            )
+          ])
+        ])
+      ]),
       _vm._v(" "),
-      _c("div", { staticClass: "panel-body" }, [
+      _c("div", { staticClass: "col-md-7 col-sm-12" }, [
         _c(
-          "form",
-          {
-            on: {
-              submit: function($event) {
-                return _vm.saveForm()
-              }
-            }
-          },
+          "div",
+          { staticClass: "panel panel-default" },
           [
-            _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "panel-heading" }, [
+              _vm._v("Message history")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "panel-body" }, [
               _c(
-                "div",
-                { staticClass: "col-lg-6 col-md-8 col-xs-12 form-group" },
+                "table",
+                { staticClass: "table table-bordered table-striped" },
                 [
-                  _c("label", { staticClass: "control-label" }, [
-                    _vm._v("Send to (e-mail)")
-                  ]),
+                  _vm._m(1),
                   _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.email,
-                        expression: "email"
-                      }
-                    ],
-                    staticClass: "form-control form-re",
-                    attrs: { type: "email", required: "" },
-                    domProps: { value: _vm.email },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.email = $event.target.value
-                      }
-                    }
-                  })
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.emailsHistory.data, function(historyItem) {
+                      return _c("tr", [
+                        _c("td", [_vm._v(_vm._s(historyItem.id))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(historyItem.email))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(historyItem.subject))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(historyItem.msg))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(historyItem.created_at))])
+                      ])
+                    }),
+                    0
+                  )
                 ]
               )
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c(
-                "div",
-                { staticClass: "col-lg-6 col-md-8 col-xs-12 form-group" },
-                [
-                  _c("label", { staticClass: "control-label" }, [
-                    _vm._v("Subject")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.subject,
-                        expression: "subject"
-                      }
-                    ],
-                    staticClass: "form-control form-re",
-                    attrs: { type: "text", required: "" },
-                    domProps: { value: _vm.subject },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.subject = $event.target.value
-                      }
-                    }
-                  })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c(
-                "div",
-                { staticClass: "col-lg-6 col-md-8 col-xs-12 form-group" },
-                [
-                  _c("label", { staticClass: "control-label" }, [
-                    _vm._v("Message")
-                  ]),
-                  _vm._v(" "),
-                  _c("textarea", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.msg,
-                        expression: "msg"
-                      }
-                    ],
-                    staticClass: "form-control form-re form-msg",
-                    attrs: { required: "" },
-                    domProps: { value: _vm.msg },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.msg = $event.target.value
-                      }
-                    }
-                  })
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _vm._m(1)
-          ]
+            _c("VuePagination", {
+              attrs: { pagination: _vm.emailsHistory, offset: 4 },
+              on: {
+                paginate: function($event) {
+                  return _vm.getSendingHistory()
+                }
+              }
+            })
+          ],
+          1
         )
       ])
     ])
@@ -39868,16 +40110,24 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "panel-heading" }, [
-      _c("h3", [_vm._v("Send message to e-mail")])
+      _c("h3", [_vm._v("Send a message to selected e-mail")])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-lg-6 col-md-8 col-xs-12 form-group" }, [
-        _c("button", { staticClass: "btn btn-success" }, [_vm._v("Send")])
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("Id")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Sent to")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Aubject")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Message")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Sent at")])
       ])
     ])
   }
@@ -39904,6 +40154,93 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("h1", [_vm._v("Laravel 5 Vue SPA Authentication")])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Pagination.vue?vue&type=template&id=d7acf176&":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Pagination.vue?vue&type=template&id=d7acf176& ***!
+  \*************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "ul",
+    { staticClass: "pagination justify-content-center" },
+    [
+      _vm.pagination.current_page > 1
+        ? _c("li", [
+            _c(
+              "a",
+              {
+                attrs: { href: "javascript:void(0)", "aria-label": "Previous" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.changePage(_vm.pagination.current_page - 1)
+                  }
+                }
+              },
+              [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("«")])]
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm._l(_vm.pagesNumber, function(page) {
+        return _c(
+          "li",
+          { class: { active: page == _vm.pagination.current_page } },
+          [
+            _c(
+              "a",
+              {
+                attrs: { href: "javascript:void(0)" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.changePage(page)
+                  }
+                }
+              },
+              [_vm._v(_vm._s(page))]
+            )
+          ]
+        )
+      }),
+      _vm._v(" "),
+      _vm.pagination.current_page < _vm.pagination.last_page
+        ? _c("li", [
+            _c(
+              "a",
+              {
+                attrs: { href: "javascript:void(0)", "aria-label": "Next" },
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.changePage(_vm.pagination.current_page + 1)
+                  }
+                }
+              },
+              [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("»")])]
+            )
+          ])
+        : _vm._e()
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -56028,6 +56365,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/Pagination.vue":
+/*!************************************************!*\
+  !*** ./resources/js/components/Pagination.vue ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Pagination_vue_vue_type_template_id_d7acf176___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Pagination.vue?vue&type=template&id=d7acf176& */ "./resources/js/components/Pagination.vue?vue&type=template&id=d7acf176&");
+/* harmony import */ var _Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Pagination.vue?vue&type=script&lang=js& */ "./resources/js/components/Pagination.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Pagination_vue_vue_type_template_id_d7acf176___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Pagination_vue_vue_type_template_id_d7acf176___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Pagination.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Pagination.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/Pagination.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Pagination.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Pagination.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Pagination.vue?vue&type=template&id=d7acf176&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/Pagination.vue?vue&type=template&id=d7acf176& ***!
+  \*******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_template_id_d7acf176___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Pagination.vue?vue&type=template&id=d7acf176& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Pagination.vue?vue&type=template&id=d7acf176&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_template_id_d7acf176___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Pagination_vue_vue_type_template_id_d7acf176___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/companies/CompaniesCreate.vue":
 /*!***************************************************************!*\
   !*** ./resources/js/components/companies/CompaniesCreate.vue ***!
@@ -56253,8 +56659,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\derkachov\Desktop\my\Laravel-vue-jwt\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\derkachov\Desktop\my\Laravel-vue-jwt\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\Working\doing\Laravel-vue-jwt\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\Working\doing\Laravel-vue-jwt\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

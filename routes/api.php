@@ -31,7 +31,8 @@ Route::group(
     function()
     {
         Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
-        Route::resource('emailsSanding', 'EmailsController', ['only' => ['store']]);
+        Route::resource('emailsSending', 'EmailsController', ['only' => ['store', 'index']]);
+        Route::get('emailsSending/repeatLast', 'EmailsController@repeatLast');
     }
 );
 
