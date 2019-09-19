@@ -11,18 +11,20 @@ class CheckUserEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $msgData;
+    public $msg;
     public $user;
+    public $subject;
 
     /**
      * Create a new message instance.
      *
      * @param $sendTo
      */
-    public function __construct($msgData, $user)
+    public function __construct($msg, $subject, $user)
     {
-        $this->msgData = $msgData;
+        $this->msg = $msg;
         $this->user = $user;
+        $this->subject = $subject;
     }
 
     /**
@@ -32,20 +34,17 @@ class CheckUserEmail extends Mailable
      */
     public function build()
     {
-        $user = $this->user;
-        $msgData = $this->msgData;
-        
-        //dd($msgData, $user);
-
-	    \Mail::send('emails.email', $msgData, function($message) use($user, $msgData){
-            $message
-	            ->from($user->email, $user->name)
-	            ->to($msgData['email'])
-	            ->subject($msgData['subject']);
-        });
-
-        /*return $this->from($user->email)
-            ->view('emails.email')
-            ->text('emails.email_plain');*/
+	    $data = [
+		    'user' => $this->user,
+		    'msg' => $this->msg
+	    ];
+	    return $this
+		    ->subject($this->subject)
+		    ->view('emails.email')
+		    ->with([
+		    	'user' => $this->user,
+			    'msg' => $this->msg,
+			    'subject' => $this->subject
+		    ]);
     }
 }

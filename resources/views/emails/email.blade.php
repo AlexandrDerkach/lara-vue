@@ -1,1 +1,1 @@
-<p>{{ $msgData['msg']}}</p>
+<p>{{ $msg}}</p>

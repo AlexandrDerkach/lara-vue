@@ -49,14 +49,16 @@ class EmailsController extends Controller
             'author_id' => $user->id
         ];
         //dd($data, $user->name);
-	    //dd(env('MAIL_HOST'));
-        if(new CheckUserEmail($msgData, $user) && EmailsSending::create($msgData))
-        {
-	        return response('Your message is sent! You could send next one.', 200);
-        }
-        else{
-        	return response('Error', 500);
-        }
+	    //dd(env('MAIL_DRIVER'));
+	    
+	    try{
+		    Mail::to($msgData['email'])
+			    ->send(new CheckUserEmail($msgData['msg'],$msgData['subject'], $user));
+		    EmailsSending::create($msgData);
+		    return response('Ok', 200);
+	    }catch (Exception $e){
+		    return response($e, 500);
+	    }
     }
     
     public function repeatLast(Request $request)
