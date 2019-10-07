@@ -31,8 +31,13 @@ Route::group(
     function()
     {
         Route::resource('companies', 'CompaniesController', ['except' => ['create', 'edit']]);
-        Route::resource('emailsSending', 'EmailsController', ['only' => ['store', 'index']]);
-        Route::get('emailsSending/repeatLast', 'EmailsController@repeatLast');
+        
+        Route::resource('singleEmailsSending', 'SingleEmailsController', ['only' => ['store', 'index']]);
+	    Route::get('singleEmailsSending/repeatLast', 'SingleEmailsController@repeatLast');
+     
+	    Route::post('massEmailsSending/getEmailsCount', 'MassEmailsController@getEmailsCount');
+	    Route::post('massEmailsSending/getEmails', 'MassEmailsController@getEmails');
+     
     }
 );
 

@@ -34,10 +34,6 @@ class CheckUserEmail extends Mailable
      */
     public function build()
     {
-	    $data = [
-		    'user' => $this->user,
-		    'msg' => $this->msg
-	    ];
 	    return $this
 		    ->subject($this->subject)
 		    ->view('emails.email')

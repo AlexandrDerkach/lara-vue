@@ -4,7 +4,7 @@
             <div class="col-md-5 col-sm-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3>Send a message to selected e-mail</h3>
+                        <h3>Single mode to sending emails</h3>
                     </div>
                     <div class="panel-body">
                         <div class="row" v-if="email.resultOk">
@@ -84,9 +84,9 @@
     }
 </style>
 <script>
-    import VuePagination from './Pagination.vue'
+    import VuePagination from '../Pagination.vue'
     export default {
-        data: function(){
+        data: () =>{
             return {
                 email: {
                     name: '',
@@ -111,7 +111,7 @@
             saveForm(){
                 event.preventDefault()
                 let app = this
-                app.axios.post('/v1/emailsSending', app.email)
+                app.axios.post('/v1/singleEmailsSending', app.email)
                     .then(resp => {
                         app.prevEmail = app.email
                         app.email = {};
@@ -123,18 +123,23 @@
             repeatLast(){
                 event.preventDefault()
                 let app = this
-                app.axios.get('/v1/emailsSending/repeatLast')
+                app.axios.get('/v1/singleEmailsSending/repeatLast')
                     .then(resp =>{
                         app.email = resp.data
                     }
                 ).catch(err => alert('error', err))
             },
             getSendingHistory(){
-                let app = this
-                app.axios.get(`/v1/emailsSending?page=${app.emailsHistory.current_page}`)
-                .then(resp => {
-                    app.emailsHistory = resp.data
-                }).catch(err => alert(err.message))
+                let app = this,
+                    currPage = app.emailsHistory.current_page
+                
+                if(currPage)
+                {
+                    app.axios.get(`/v1/singleEmailsSending?page=${currPage}`)
+                    .then(resp => {
+                        app.emailsHistory = resp.data
+                    }).catch(err => alert(err.message))
+                }
             },
             clearForm(){
                 this.email = {}

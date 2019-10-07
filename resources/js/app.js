@@ -14,7 +14,7 @@ import Login from './components/Auth/Login.vue'
 import CompaniesIndex from './components/companies/CompaniesIndex.vue'
 import CompaniesCreate from './components/companies/CompaniesCreate.vue'
 import CompaniesEdit from './components/companies/CompaniesEdit.vue'
-import EmailIndex from './components/EmailsSending.vue'
+import EmailIndex from './components/emailsSending/EmailsSending.vue'
 
 Vue.use(VueRouter)
 Vue.use(VueAxios, axios)

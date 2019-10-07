@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmailsSendingsTable extends Migration
+class CreateSingleEmailsSendingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEmailsSendingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('emails_sending', function (Blueprint $table) {
+        Schema::create('sinble_emails_sending', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('email')->nullable();
             $table->string('subject')->nullable();
